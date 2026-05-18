@@ -17,11 +17,15 @@ from .util import subvals, wraps
 
 def trace(start_node, fun, x):
     with trace_stack.new_trace() as trace_id:
-        # Wrap 'x' in a box.
+        # Wrap 'x' in a box. x is the argument to fun().
         start_box = new_box(x, trace_id, start_node)
 
         # Apply fun() to boxed value. This will carry the value throughout the
         # comutation as well as the box.
+        # unary_fun(start_box)
+        #   -> tanh(*subval(args, argnum=0, start_box)) # args = (start_box,), argnum=0
+        #   -> return (1.0 - anp.exp(-start_box))  / (1.0 + anp.exp(-start_box))
+        # anp.exp -> primitive(np.exp) -> f_wrapped <with name and docstring of np.exp>
         end_box = fun(start_box)
 
         if isbox(end_box) and end_box._trace_id == start_box._trace_id:
@@ -62,12 +66,15 @@ class Node(object):
 def primitive(f_raw):
     """Wraps a function so that its gradient (vjp) can be specified and its
     invocation can be recorded."""
+    # f_raw is the original numpy function, e.g. np.exp
     @wraps(f_raw)
     def f_wrapped(*args, **kwargs):
         # Fetch boxed arguments with largest trace_id.  This ensures that the
         # computational graph being constructed only consists of other nodes
         # from the same call to trace().
         boxed_args, trace_id = find_top_boxed_args(args)
+        # boxed_args: List of (index, boxed argument). Arguments have same, largest
+        # boxed_args = [(0, start_box)]
         if boxed_args:
             # Replace some elements of args with corresponding unboxed values.
             argvals = subvals(args, [(argnum, box._value) for argnum, box in boxed_args])

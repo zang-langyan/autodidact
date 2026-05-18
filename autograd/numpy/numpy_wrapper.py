@@ -78,8 +78,8 @@ def wrap_namespace(old, new):
       new: __dict__ of module to copy to.
     """
     unchanged_types = {float, int, type(None), type}
-    int_types = {_np.int, _np.int8, _np.int16, _np.int32, _np.int64, _np.integer}
-    function_types = {_np.ufunc, types.FunctionType, types.BuiltinFunctionType}
+    int_types = {_np.int8, _np.int16, _np.int32, _np.int64, _np.integer}
+    function_types = {_np.ufunc, type(_np.where), types.FunctionType, types.BuiltinFunctionType}
     for name, obj in old.items():
         if obj in nograd_functions:
             # Functions without gradients. We don't bother to trace values that
@@ -88,6 +88,7 @@ def wrap_namespace(old, new):
         elif type(obj) in function_types:
             # Functions with gradients. We trace values.
             new[name] = primitive(obj)
+            # print(obj.__name__)
         elif type(obj) is type and obj in int_types:
             # Wrap int types with something identical except that calls to __new__
             # immediately strip argument of boxes.
@@ -97,6 +98,10 @@ def wrap_namespace(old, new):
             new[name] = wrap_intdtype(obj)
         elif type(obj) in unchanged_types:
             new[name] = obj
+        # else:
+        #     print("autograd.numpy: couldn't wrap", name, type(obj))
 
 # Set autograd.numpy.<function> = wrap(numpy.<function>)
 wrap_namespace(_np.__dict__, globals())
+# print(_np.__dict__)
+# print([name for name in globals().keys() if not name.startswith('_')])

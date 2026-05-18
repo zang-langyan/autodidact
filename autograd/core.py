@@ -28,7 +28,7 @@ def make_vjp(fun, x):
 
     """
     start_node = Node.new_root()
-    end_value, end_node = trace(start_node, fun, x)
+    end_value, end_node = trace(start_node, fun, x) # fun -> unary_fun
     if end_node is None:
         def vjp(g): return np.zeros_like(x)
     else:

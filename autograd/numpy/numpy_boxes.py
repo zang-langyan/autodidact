@@ -103,8 +103,10 @@ diff_methods = [
     'transpose',
     'var']
 for method_name in nondiff_methods + diff_methods:
-    setattr(ArrayBox, method_name, anp.__dict__[method_name])
+    if method_name in anp.__dict__:
+        setattr(ArrayBox, method_name, anp.__dict__[method_name])
 
 # Flatten has no function, only a method.
-setattr(ArrayBox, 'flatten', anp.__dict__['ravel'])
+if 'flatten' in anp.__dict__:
+    setattr(ArrayBox, 'flatten', anp.__dict__['ravel'])
 

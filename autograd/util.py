@@ -16,6 +16,7 @@ def subvals(x, ivs):
         x_[i] = v
     return tuple(x_)
 
+# x -> tuple(*args)
 def subval(x, i, v):
     """Replace the i-th value of x with v."""
     x_ = list(x)

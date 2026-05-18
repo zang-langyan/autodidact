@@ -1,4 +1,7 @@
 from __future__ import absolute_import
+import sys
+if '../' not in sys.path:
+  sys.path.append('../')
 import autograd.numpy as np
 import matplotlib.pyplot as plt
 from autograd import grad

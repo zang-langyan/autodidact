@@ -57,6 +57,8 @@ defvjp(anp.log,    lambda g, ans, x: g / x)
 defvjp(anp.tanh,   lambda g, ans, x: g / anp.cosh(x) **2)
 defvjp(anp.sinh,   lambda g, ans, x: g * anp.cosh(x))
 defvjp(anp.cosh,   lambda g, ans, x: g * anp.sinh(x))
+defvjp(anp.sin,   lambda g, ans, x: g * anp.cos(x))
+defvjp(anp.cos,   lambda g, ans, x: -g * anp.sin(x))
 
 defvjp(anp.where, None,
        lambda g, ans, c, x=None, y=None: anp.where(c, g, anp.zeros(g.shape)),
