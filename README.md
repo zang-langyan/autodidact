@@ -1,5 +1,10 @@
 # Autodidact: a pedagogical implementation of [Autograd](https://github.com/hips/autograd)
 
+<figure>
+  <img src="./notebooks/autograd.png" alt="autograd schematic diagram">
+  <figcaption align="center"><b>Figure 1:</b> A schematic diagram for autograd created by Langyan.</figcaption>
+</figure>
+
 This is a tutorial implementation based on [the full version of
 Autograd](https://github.com/hips/autograd).
 
